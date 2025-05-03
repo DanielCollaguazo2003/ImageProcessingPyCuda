@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ImageProcessingPyCuda</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
 <style>
+    * {
+        box-sizing: border-box;
+    }
     body {
-        font-family: Arial, sans-serif;
+        font-family: "Roboto", sans-serif;
         margin: 0;
         padding: 0;
         background-color: #f4f4f4;
@@ -49,6 +55,26 @@
     .form-container label, .form-container input, .form-container select, .form-container button {
         margin-bottom: 10px;
     }
+
+    .results-container {
+        display: flex;
+        justify-content: space-around;
+        padding: 20px;
+    }
+    .original-container, .results {
+        width: 45%;
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .original-image, .result-image {
+        text-align: center;
+    }
+    .original-image img, .result-image img {
+        width: 100%;
+        height: auto;
+    }
 </style>
 
 </head>
@@ -75,47 +101,56 @@
     </section>
     <section class="processing-imagen">
         <div class="form-container">
-            <form action="">
+            <form method="POST" action="/" enctype="multipart/form-data">
                 <div class="select-container">
                     <label for="image">Select an image:</label>
-                    <input type="file" id="image" name="image" accept="image/*" required>
+                    <input type="file" id="image" name="imagen" accept="image/*" required>
                 </div>
                 <div class="operation-container">
                     <label for="operation">Select an operation:</label>
-                    <select id="operation" name="operation" required>
+                    <select id="operation" name="filtro" required>
                         <option value="">--Select an operation--</option>
                         <option value="gaussian">Gaussian</option>
                         <option value="laplacian">Laplacian</option>
-                        <option value="sobelx">Sobel X</option>
+                        <option value="sobel_x">Sobel X</option>
                     </select>
                 </div>
                 <div class="size-kernel-container">
                     <label for="text">Kernel Size</label>
-                    <input type="number" id="input-kernel" name="kernel" placeholder="Enter kernel size" required>
+                    <input type="number" id="input-kernel" name="kernel_size" placeholder="Enter kernel size" required>
                 </div>
                 <button type="submit">Process Image</button>
-            </form>
+            </form>            
         </div>
     </section>
     <section class="results-container">
+        <div class="labels-results-container">
+            <h2>Results</h2>
+            <div class="labels-results">
+                <p>Imagen Size: {{tamaño_imagen}}</p>
+
+                <p>Filter: {{filtro_aplicado}}</p>
+                <p>Kernel Size: {{kernel_size}} x {{kernel_size}}</p>
+                <p>Execution Time: {{tiempo_ejecucion}}ms</p>
+            </div>
+        </div>
         <div class="original-container">
             <h2>Original Image</h2>
             <div class="original-image">
-                <img src="./assets/ej1gausseano121_gpu.jpg" alt="Original Image">
+                <img src="{{ imagen_original }}" alt="Imagen Original">
             </div>
             <div class="original-text">
                 <p>Original image will be displayed here.</p>
             </div>
         </div>
-        <div class="results">
-            <h2>Results</h2>
-            <div class="result-image">
-                <img src="./assets/ej1gausseano121_gpu.jpg" alt="Result Image">
-            </div>
-            <div class="result-text">
-                <p>Processed image will be displayed here.</p>
-            </div>
+        {% if imagen_resultado %}
+    <div class="results">
+        <h3>Resultado</h3>
+        <div class="result-image">
+            <img src="{{ imagen_resultado }}" alt="Imagen procesada">
         </div>
+    </div>
+    {% endif %}
     </section>
 </body>
 </html>
