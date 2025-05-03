@@ -5,6 +5,26 @@ from pycuda.compiler import SourceModule
 import os
 
 class Imagen:
+    @staticmethod
+    def obtener_info_cuda():
+        cuda.init()
+        info = {
+            "cantidad_dispositivos": cuda.Device.count(),
+            "dispositivos": []
+        }
+
+        for i in range(cuda.Device.count()):
+            dev = cuda.Device(i)
+            dispositivo_info = {
+                "nombre": dev.name(),
+                "compute_capability": "%d.%d" % dev.compute_capability(),
+                "memoria_total": f"{dev.total_memory()} bytes",
+                "multiprocesadores": dev.get_attribute(cuda.device_attribute.MULTIPROCESSOR_COUNT)
+            }
+            info["dispositivos"].append(dispositivo_info)
+
+        return info
+
     def apply_convolution_parallel_rgb(self, image, kernel):
         cuda.init()
         device = cuda.Device(0)
@@ -88,8 +108,8 @@ class Imagen:
             cuda.memcpy_dtoh(result_image, result_image_gpu)
             result_image = result_image.reshape((height, width, 3)).astype(np.uint8)
 
-            return Image.fromarray(result_image)
-
+            return Image.fromarray(result_image), grid_size, block_size
+        
         except cuda.Error as e:
             raise RuntimeError(f"Error al usar la GPU: {e}")
 

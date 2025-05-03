@@ -9,93 +9,205 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
     body {
-        font-family: "Roboto", sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f4f4f4;
+        background-color: #f9f9f9;
+        color: #333;
     }
-    .header-container {
+
+    h1, h2, h3 {
         text-align: center;
-        padding: 20px;
-        background-color: #333;
-        color: white;
+        margin-bottom: 10px;
+        color: #222;
+        margin-top: 0px;
     }
+
+    p, label, select, input, button {
+        font-size: 16px;
+    }
+
+    .header-container {
+        padding: 10px 20px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
     .examples-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        max-width: 900px;
+        margin: auto;
     }
+
     .examples {
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
+        flex-wrap: wrap;
         gap: 20px;
+        margin-top: 20px;
     }
+
     .img-example {
         text-align: center;
     }
+
     .img-example img {
         width: 200px;
-        height: auto;
+        border-radius: 8px;
+        border: 1px solid #ddd;
     }
+
     .processing-imagen {
-        padding: 20px;
+        padding: 40px 20px;
+        background-color: #fafafa;
     }
+
     .form-container {
         max-width: 600px;
         margin: auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    .form-container form {
-        display: flex;
-        flex-direction: column;
+
+    .select-container,
+    .operation-container,
+    .size-kernel-container {
+        margin-bottom: 20px;
     }
-    .form-container label, .form-container input, .form-container select, .form-container button {
-        margin-bottom: 10px;
+
+    input[type="file"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #preview-container {
+        text-align: center;
     }
 
     .results-container {
+        padding: 40px 20px;
+    }
+
+    .images-container {
         display: flex;
-        justify-content: space-around;
-        padding: 20px;
+        flex-direction: row;
+        
+        
     }
-    .original-container, .results {
-        width: 45%;
-        background-color: white;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    .original-container,
+    .results {
+        width: 50%;
+        margin: 0 10px;
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    .original-image, .result-image {
-        text-align: center;
+
+    .labels-results-container{
+        max-width: 800px;
+        margin: 30px auto;
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    .original-image img, .result-image img {
+
+    .labels-results p {
+        margin: 5px 0;
+    }
+
+    .original-image img,
+    .result-image img {
         width: 100%;
-        height: auto;
+        max-width: 500px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        display: block;
+        margin: auto;
+    }
+
+    .original-text {
+        text-align: center;
+        font-style: italic;
+        margin-top: 10px;
     }
 </style>
+
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        const preview = document.getElementById('image-preview');
+        
+        reader.onload = function(){
+            preview.src = reader.result;
+            preview.style.display = 'block';
+        };
+    
+        if (event.target.files.length > 0) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+
+    document.querySelector("form").addEventListener("submit", function(e) {
+    const input = document.getElementById("input-kernel");
+    const errorText = document.getElementById("kernel-error");
+    const value = parseInt(input.value);
+
+    if (isNaN(value) || value < 3 || value % 2 === 0) {
+        e.preventDefault();
+        errorText.style.display = "block";
+        input.style.borderColor = "red";
+    } else {
+        errorText.style.display = "none";
+        input.style.borderColor = "";
+    }
+});
+    </script>
+    
 
 </head>
 <body>
     <section class="header-container">
         <div class="examples-container">
-            <h1>ImageProcessingPyCuda</h1>
-            <p>Image Processing with PyCUDA</p>
+            <h1>Image Processing with PyCuda</h1>
             <div class="examples">
                 <div class="img-example">
-                    <img src="./assets/ej1gausseano121_gpu.jpg" alt="gaussean-example">
-                    <p>Gaussean</p>
+                    <img src="{{ url_for('static', filename='static/ej1gausseano121_gpu.jpg') }}" alt="gaussian-example">
+                    <p>Gaussian</p>
                 </div>
                 <div class="img-example">
-                    <img src="./assets/ej1laplacian21x21_cpu.jpg" alt="laplacian-example">
+                    <img src="{{ url_for('static', filename='static/ej1laplacian21x21_cpu.jpg') }}" alt="laplacian-example">
                     <p>Laplacian</p>
                 </div>
                 <div class="img-example">
-                    <img src="./assets/ej1sobelx13x13_gpu.jpg" alt="sobelx-example"> 
+                    <img src="{{ url_for('static', filename='static/ej1sobelx13x13_gpu.jpg') }}" alt="sobelx-example"> 
                     <p>Sobel X</p>                   
-                </div>
+                </div>                
             </div>
         </div>
     </section>
@@ -104,7 +216,11 @@
             <form method="POST" action="/" enctype="multipart/form-data">
                 <div class="select-container">
                     <label for="image">Select an image:</label>
-                    <input type="file" id="image" name="imagen" accept="image/*" required>
+                    <input type="file" id="image" name="imagen" accept="image/*" onchange="previewImage(event)" required>
+                </div>
+                <div id="preview-container" style="margin-top: 15px;">
+                    <h3>Image Preview</h3>
+                    <img id="image-preview" src="#" alt="Preview will appear here" style="max-width: 300px; display: none; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; place-self: center;">
                 </div>
                 <div class="operation-container">
                     <label for="operation">Select an operation:</label>
@@ -116,40 +232,46 @@
                     </select>
                 </div>
                 <div class="size-kernel-container">
-                    <label for="text">Kernel Size</label>
-                    <input type="number" id="input-kernel" name="kernel_size" placeholder="Enter kernel size" required>
+                    <label for="input-kernel">Kernel Size</label>
+                    <input type="number" id="input-kernel" name="kernel_size" placeholder="Enter kernel size" min="3" step="2" required>
+                    <small id="kernel-error" style="color: red; display: none;">Please enter an odd number ≥ 3.</small>
                 </div>
                 <button type="submit">Process Image</button>
             </form>            
         </div>
     </section>
+    
     <section class="results-container">
+        {% if imagen_resultado %}
         <div class="labels-results-container">
-            <h2>Results</h2>
+            <h2>Image Data</h2>
             <div class="labels-results">
                 <p>Imagen Size: {{tamaño_imagen}}</p>
-
                 <p>Filter: {{filtro_aplicado}}</p>
                 <p>Kernel Size: {{kernel_size}} x {{kernel_size}}</p>
-                <p>Execution Time: {{tiempo_ejecucion}}ms</p>
+                <p>Execution Time: {{tiempo_ejecucion}} ms</p>
+                <h3>CUDA Execution Details</h3>
+                <p><strong>Block size:</strong> {{ block_size }}</p>
+                <p><strong>Grid size:</strong> {{ grid_size }}</p>
             </div>
         </div>
-        <div class="original-container">
-            <h2>Original Image</h2>
-            <div class="original-image">
-                <img src="{{ imagen_original }}" alt="Imagen Original">
+        <div class="images-container">
+            <div class="original-container">
+                <h2>Original Image</h2>
+                <div class="original-image">
+                    <img src="{{ imagen_original }}" alt="Imagen Original">
+                </div>
             </div>
-            <div class="original-text">
-                <p>Original image will be displayed here.</p>
+            
+            <div class="results">
+                <h2>Result Image</h2>
+                <div class="result-image">
+                    <img src="{{ imagen_resultado }}" alt="Imagen procesada">
+                </div>
             </div>
+
         </div>
-        {% if imagen_resultado %}
-    <div class="results">
-        <h3>Resultado</h3>
-        <div class="result-image">
-            <img src="{{ imagen_resultado }}" alt="Imagen procesada">
-        </div>
-    </div>
+        
     {% endif %}
     </section>
 </body>

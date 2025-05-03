@@ -47,7 +47,7 @@ def procesar_imagen():
             return "Filtro no reconocido", 400
 
         inicio = time.time()
-        result_img = img_processor.apply_convolution_parallel_rgb(img, kernel)
+        result_img, grid_size, block_size = img_processor.apply_convolution_parallel_rgb(img, kernel)
         fin = time.time()
         tiempo_ejecucion = round(fin - inicio, 4) * 1000  
 
@@ -62,7 +62,9 @@ def procesar_imagen():
             filtro_aplicado=filtro,
             kernel_size=kernel_size,
             tiempo_ejecucion=tiempo_ejecucion,
-            tamaño_imagen=f"{image_size[0]} x {image_size[1]}"
+            tamaño_imagen=f"{image_size[0]} x {image_size[1]}",
+            grid_size=grid_size,
+            block_size=block_size,
         )
 
     except Exception as e:
