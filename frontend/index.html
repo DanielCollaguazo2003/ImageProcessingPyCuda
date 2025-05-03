@@ -156,6 +156,12 @@
         font-style: italic;
         margin-top: 10px;
     }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
 </style>
 
 <script>
@@ -274,5 +280,69 @@
         
     {% endif %}
     </section>
+
+    <div id="loading-overlay" style="
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    ">
+
+        <div class="spinner" style="
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+        "></div>
+        <p style="color: white; font-size: 20px; margin-top: 20px; text-align: center;">Procesando imagen...<br>Por favor espera.</p>
+    </div>
+
+
 </body>
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        const preview = document.getElementById('image-preview');
+
+        reader.onload = function () {
+            preview.src = reader.result;
+            preview.style.display = 'block';
+        };
+
+        if (event.target.files.length > 0) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const overlay = document.getElementById("loading-overlay");
+
+        form.addEventListener("submit", function (e) {
+            const input = document.getElementById("input-kernel");
+            const errorText = document.getElementById("kernel-error");
+            const value = parseInt(input.value);
+
+            if (isNaN(value) || value < 3 || value % 2 === 0) {
+                e.preventDefault();
+                errorText.style.display = "block";
+                input.style.borderColor = "red";
+            } else {
+                errorText.style.display = "none";
+                input.style.borderColor = "";
+                overlay.style.display = "flex"; // ← se muestra justo antes del envío
+            }
+        });
+    });
+</script>
+
+
 </html>

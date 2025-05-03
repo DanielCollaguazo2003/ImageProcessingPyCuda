@@ -7,7 +7,6 @@ from kernels import Kernels
 
 app = Flask(__name__, static_folder='../frontend', template_folder='../frontend')
 app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'img')
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
@@ -26,9 +25,6 @@ def procesar_imagen():
     try:
         filtro = request.form.get('filtro', 'default')
         kernel_size = int(request.form.get('kernel_size', 3))
-
-        if kernel_size != 3:
-            return "Por ahora solo se admite kernel 3x3", 400
 
         img = Image.open(archivo).convert('RGB')
         image_size = img.size 
@@ -70,5 +66,6 @@ def procesar_imagen():
     except Exception as e:
         return f"Ocurrió un error al procesar la imagen: {str(e)}", 500
 
-if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
