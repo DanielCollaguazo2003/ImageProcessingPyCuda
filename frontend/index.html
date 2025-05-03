@@ -4,8 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ImageProcessingPyCuda</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    .header-container {
+        text-align: center;
+        padding: 20px;
+        background-color: #333;
+        color: white;
+    }
+    .examples-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .examples {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+    .img-example {
+        text-align: center;
+    }
+    .img-example img {
+        width: 200px;
+        height: auto;
+    }
+    .processing-imagen {
+        padding: 20px;
+    }
+    .form-container {
+        max-width: 600px;
+        margin: auto;
+    }
+    .form-container form {
+        display: flex;
+        flex-direction: column;
+    }
+    .form-container label, .form-container input, .form-container select, .form-container button {
+        margin-bottom: 10px;
+    }
+</style>
+
 </head>
 <body>
-    
+    <section class="header-container">
+        <div class="examples-container">
+            <h1>ImageProcessingPyCuda</h1>
+            <p>Image Processing with PyCUDA</p>
+            <div class="examples">
+                <div class="img-example">
+                    <img src="./assets/ej1gausseano121_gpu.jpg" alt="gaussean-example">
+                    <p>Gaussean</p>
+                </div>
+                <div class="img-example">
+                    <img src="./assets/ej1laplacian21x21_cpu.jpg" alt="laplacian-example">
+                    <p>Laplacian</p>
+                </div>
+                <div class="img-example">
+                    <img src="./assets/ej1sobelx13x13_gpu.jpg" alt="sobelx-example"> 
+                    <p>Sobel X</p>                   
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="processing-imagen">
+        <div class="form-container">
+            <form action="">
+                <div class="select-container">
+                    <label for="image">Select an image:</label>
+                    <input type="file" id="image" name="image" accept="image/*" required>
+                </div>
+                <div class="operation-container">
+                    <label for="operation">Select an operation:</label>
+                    <select id="operation" name="operation" required>
+                        <option value="">--Select an operation--</option>
+                        <option value="gaussian">Gaussian</option>
+                        <option value="laplacian">Laplacian</option>
+                        <option value="sobelx">Sobel X</option>
+                    </select>
+                </div>
+                <div class="size-kernel-container">
+                    <label for="text">Kernel Size</label>
+                    <input type="number" id="input-kernel" name="kernel" placeholder="Enter kernel size" required>
+                </div>
+                <button type="submit">Process Image</button>
+            </form>
+        </div>
+    </section>
+    <section class="results-container">
+        <div class="original-container">
+            <h2>Original Image</h2>
+            <div class="original-image">
+                <img src="./assets/ej1gausseano121_gpu.jpg" alt="Original Image">
+            </div>
+            <div class="original-text">
+                <p>Original image will be displayed here.</p>
+            </div>
+        </div>
+        <div class="results">
+            <h2>Results</h2>
+            <div class="result-image">
+                <img src="./assets/ej1gausseano121_gpu.jpg" alt="Result Image">
+            </div>
+            <div class="result-text">
+                <p>Processed image will be displayed here.</p>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
