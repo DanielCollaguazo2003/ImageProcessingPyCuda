@@ -242,10 +242,25 @@
                     <input type="number" id="input-kernel" name="kernel_size" placeholder="Enter kernel size" min="3" step="2" required>
                     <small id="kernel-error" style="color: red; display: none;">Please enter an odd number ≥ 3.</small>
                 </div>
-                <button type="submit">Process Image</button>
+                <div class="execution-settings">
+                    <label for="block_x">Block Size X:</label>
+                    <input type="number" id="block_x" name="block_x" placeholder="16" min="1" >
+                
+                    <label for="block_y">Block Size Y:</label>
+                    <input type="number" id="block_y" name="block_y" placeholder="16" min="1" >
+                <!--
+                    <label for="grid_x">Grid Size X:</label>
+                    <input type="number" id="grid_x" name="grid_x" min="1" >
+                
+                    <label for="grid_y">Grid Size Y:</label>
+                    <input type="number" id="grid_y" name="grid_y" min="1" >
+                -->
+                </div>
+                <button type="submit" style="margin-top: 15px;">Process Image</button>
             </form>            
         </div>
     </section>
+    
     
     <section class="results-container">
         {% if imagen_resultado %}

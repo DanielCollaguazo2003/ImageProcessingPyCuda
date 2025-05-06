@@ -5,6 +5,12 @@ import time
 from image import Imagen
 from kernels import Kernels
 
+def parse_int_or_none(value):
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return None
+
 app = Flask(__name__, static_folder='../frontend', template_folder='../frontend')
 app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'img')
 
@@ -25,6 +31,13 @@ def procesar_imagen():
     try:
         filtro = request.form.get('filtro', 'default')
         kernel_size = int(request.form.get('kernel_size', 3))
+        block_x = parse_int_or_none(request.form.get('block_x'))
+        block_y = parse_int_or_none(request.form.get('block_y'))
+        #grid_x = parse_int_or_none(request.form.get('grid_x'))
+        #grid_y = parse_int_or_none(request.form.get('grid_y'))
+
+        block = (block_x, block_y, 1) if block_x and block_y else None
+        #grid = (grid_x, grid_y, 1) if grid_x and grid_y else None
 
         img = Image.open(archivo).convert('RGB')
         image_size = img.size 
@@ -43,7 +56,7 @@ def procesar_imagen():
             return "Filtro no reconocido", 400
 
         inicio = time.time()
-        result_img, grid_size, block_size = img_processor.apply_convolution_parallel_rgb(img, kernel)
+        result_img, grid_size, block_size = img_processor.apply_convolution_parallel_rgb(img, kernel, block)
         fin = time.time()
         tiempo_ejecucion = round(fin - inicio, 4) * 1000  
 
@@ -65,6 +78,8 @@ def procesar_imagen():
 
     except Exception as e:
         return f"Ocurrió un error al procesar la imagen: {str(e)}", 500
+    
+    
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

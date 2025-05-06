@@ -28,7 +28,7 @@ class Imagen:
 
         return info
 
-    def apply_convolution_parallel_rgb(self, image, kernel):
+    def apply_convolution_parallel_rgb(self, image, kernel, block_size=None):
             cuda.init()
             device = cuda.Device(0)
             context = device.make_context()
@@ -53,7 +53,9 @@ class Imagen:
 
                 cuda.memcpy_htod(img_array_gpu, flat_img_array)
 
-                block_size = (16, 16, 1)
+                if block_size is None:
+                    block_size = (16, 16, 1)
+                    
                 grid_size = (
                     int(np.ceil(width / block_size[0])),
                     int(np.ceil(height / block_size[1])),
